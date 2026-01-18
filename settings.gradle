@@ -1,0 +1,2 @@
+rootProject.name = 'user-api'
+include('domain', 'application', 'infrastructure')

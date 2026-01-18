@@ -1,0 +1,15 @@
+spring:
+  cloud:
+    stream:
+      default:
+        content-type: application/json
+      bindings:
+        # Outgoing bindings
+        ## User Created Event
+        userCreatedEvent-out-0:
+          destination: user.exchange
+        userCreatedEventError-out-0:
+          destination: user.exchange.error
+          producer:
+            requiredGroups: user.user.created.queue.error
+        # ---------------------------------------

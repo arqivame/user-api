@@ -1,0 +1,36 @@
+spring:
+  cloud:
+    stream:
+      binders:
+        rabbitmq-binder:
+          type: rabbit
+          environment:
+            spring:
+              rabbitmq:
+                host: ${rabbitmq.host}
+                port: ${rabbitmq.port}
+                username: ${rabbitmq.username}
+                password: ${rabbitmq.password}
+      default-binder: rabbitmq-binder
+      rabbit:
+        bindings:
+          # Outgoing RabbitMQ bindings
+          ## User Created Event
+          userCreatedEvent-out-0:
+            producer:
+              exchangeType: topic
+              destination: user.exchange
+              routingKeyExpression: "'user.user.created'"
+          userCreatedEventError-out-0:
+            producer:
+              exchangeType: topic
+              destination: user.exchange.error
+              routingKeyExpression: "'user.user.created'"
+              queueNameGroupOnly: true
+          # ---------------------------------------
+
+rabbitmq:
+  host: ${RABBITMQ_HOST:localhost}
+  port: ${RABBITMQ_PORT:5672}
+  username: ${RABBITMQ_USERNAME:rabbitmq}
+  password: ${RABBITMQ_PASSWORD:rabbitmq}

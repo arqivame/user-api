@@ -1,0 +1,19 @@
+server:
+  port: ${application.server.port}
+spring:
+  profiles:
+    active:
+      - spring-cloud
+      - cors
+      - keycloak
+      - ${application.vendor.database}
+      - ${application.vendor.messaging}
+
+application:
+  name: user-api
+  server:
+    context-path: /api/user
+    port: ${USER_SERVER_PORT:8080}
+  vendor:
+    database: ${USER_VENDOR_DATABASE:postgres} # h2 | postgres
+    messaging: ${USER_VENDOR_MESSAGING:rabbitmq} # rabbitmq
