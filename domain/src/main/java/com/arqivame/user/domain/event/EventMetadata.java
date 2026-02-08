@@ -8,7 +8,6 @@ public record EventMetadata(
         String domain,
         String entity,
         String action,
-        String service,
         String version,
         Instant occurredAt,
         Set<EventEntity> relatedEntities) {
@@ -17,14 +16,12 @@ public record EventMetadata(
         Objects.requireNonNull(domain);
         Objects.requireNonNull(entity);
         Objects.requireNonNull(action);
-        Objects.requireNonNull(service);
         Objects.requireNonNull(version);
         Objects.requireNonNull(occurredAt);
 
         relatedEntities = Objects.isNull(relatedEntities) ? Set.of() : Set.copyOf(relatedEntities);
     }
 
-    private static final String SERVICE = "com.arqivame.user.api";
     private static final String DOMAIN = "user";
 
     public static EventMetadata create(
@@ -37,7 +34,6 @@ public record EventMetadata(
                 DOMAIN,
                 entity,
                 action,
-                SERVICE,
                 version,
                 occurredAt,
                 relatedEntities);

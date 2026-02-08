@@ -1,15 +1,42 @@
 spring:
   cloud:
+    function:
+      definition: userCreatedIntegrationConsumer
     stream:
+      function:
+        bindings:
+          userCreatedIntegrationConsumer-in-0: userCreatedEvent-in-0
       default:
         content-type: application/json
+      default-binder: private-binder
       bindings:
-        # Outgoing bindings
+        # Private Outgoing bindings
         ## User Created Event
         userCreatedEvent-out-0:
-          destination: user.exchange
+          binder: private-binder
+          destination: private.user.exchange
         userCreatedEventError-out-0:
-          destination: user.exchange.error
+          binder: private-binder
+          destination: private.user.exchange.error
           producer:
-            requiredGroups: user.user.created.queue.error
+            requiredGroups: private.user.user.created.queue.error
+        # ---------------------------------------
+        # Private Incoming bindings
+        ## User Created Event Integration
+        userCreatedEvent-in-0:
+          binder: private-binder
+          destination: private.user.exchange
+          group: private.user.created.queue
+          consumer:
+            max-attempts: 1
+            concurrency: ${application.messaging.consumer.user-created-event.concurrency}
+        # ---------------------------------------
+        # Public Outgoing bindings
+        ## User Created Event Integration
+        userCreatedIntegrationEventV1-out-0:
+          binder: public-binder
+          destination: user.exchange
+        # ---------------------------------------
+        # Public Incoming bindings
+        ## (Add public incoming bindings here if needed)
         # ---------------------------------------

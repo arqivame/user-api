@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Primary;
 
 import com.arqivame.user.infrastructure.messaging.producer.MessageProducer;
 import com.arqivame.user.infrastructure.messaging.producer.springcloud.SpringCloudMessageProducer;
+import com.arqivame.user.infrastructure.user.message.UserCreatedIntegrationMessageV1;
 import com.arqivame.user.infrastructure.user.message.UserCreatedMessage;
 
 @Configuration
@@ -29,6 +30,11 @@ public class MessageProducerConfig {
     @Bean
     MessageProducer<UserCreatedMessage> userCreatedEventError() {
         return new SpringCloudMessageProducer<>(streamBridge, "userCreatedEventError-out-0");
+    }
+
+    @Bean
+    MessageProducer<UserCreatedIntegrationMessageV1> userCreatedIntegrationEventV1() {
+        return new SpringCloudMessageProducer<>(streamBridge, "userCreatedIntegrationEventV1-out-0");
     }
 
 }

@@ -2,31 +2,69 @@ spring:
   cloud:
     stream:
       binders:
-        rabbitmq-binder:
+        private-binder:
           type: rabbit
           environment:
             spring:
               rabbitmq:
+                virtual-host: user
                 host: ${rabbitmq.host}
                 port: ${rabbitmq.port}
                 username: ${rabbitmq.username}
                 password: ${rabbitmq.password}
-      default-binder: rabbitmq-binder
+        public-binder:
+          type: rabbit
+          environment:
+            spring:
+              rabbitmq:
+                virtual-host: public
+                host: ${rabbitmq.host}
+                port: ${rabbitmq.port}
+                username: ${rabbitmq.username}
+                password: ${rabbitmq.password}
       rabbit:
         bindings:
-          # Outgoing RabbitMQ bindings
+          # ---------------------------------------
+          # Private Outgoing RabbitMQ bindings
           ## User Created Event
           userCreatedEvent-out-0:
             producer:
               exchangeType: topic
-              destination: user.exchange
-              routingKeyExpression: "'user.user.created'"
+              destination: private.user.exchange
+              routingKeyExpression: "'user.created'"
           userCreatedEventError-out-0:
             producer:
               exchangeType: topic
-              destination: user.exchange.error
-              routingKeyExpression: "'user.user.created'"
+              destination: private.user.exchange.error
+              routingKeyExpression: "'user.created'"
               queueNameGroupOnly: true
+          # ---------------------------------------
+          # ---------------------------------------
+          # Private Incoming RabbitMQ bindings
+          ## User Created Event
+          userCreatedEvent-in-0:
+            consumer:
+              exchangeType: topic
+              bindingRoutingKey: user.created
+              queueNameGroupOnly: true
+              autoBindDlq: true
+              deadLetterExchange: private.user.exchange.wait
+              deadLetterQueueName: private.user.created.queue.wait
+              dlqDeadLetterExchange: private.user.exchange
+              dlqDeadLetterRoutingKey: user.created
+              republishToDlq: false
+              dlqTtl: 5000
+          # ---------------------------------------
+          # Public Outgoing RabbitMQ bindings
+          ## User Created Event Integration
+          userCreatedIntegrationEventV1-out-0:
+              producer:
+                exchangeType: topic
+                destination: user.exchange
+                routingKeyExpression: "'user.created.v1'"
+          # ---------------------------------------
+          # Public Incoming RabbitMQ bindings
+          ## (Add public incoming bindings here if needed)
           # ---------------------------------------
 
 rabbitmq:

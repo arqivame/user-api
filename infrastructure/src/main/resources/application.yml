@@ -17,3 +17,8 @@ application:
   vendor:
     database: ${USER_VENDOR_DATABASE:postgres} # h2 | postgres
     messaging: ${USER_VENDOR_MESSAGING:rabbitmq} # rabbitmq
+  messaging:
+    consumer:
+      user-created-event:
+        concurrency: ${USER_MESSAGING_CONSUMER_USER_CREATED_EVENT_CONCURRENCY:1}
+        max-attempts: ${USER_MESSAGING_CONSUMER_USER_CREATED_EVENT_MAX_ATTEMPTS:5}

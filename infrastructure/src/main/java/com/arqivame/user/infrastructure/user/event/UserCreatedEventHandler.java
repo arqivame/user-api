@@ -6,7 +6,6 @@ import com.arqivame.user.domain.event.EventHandler;
 import com.arqivame.user.domain.user.event.UserCreatedEvent;
 import com.arqivame.user.infrastructure.messaging.producer.MessageProducer;
 import com.arqivame.user.infrastructure.user.message.UserCreatedMessage;
-import com.arqivame.user.infrastructure.user.presenter.UserPresenter;
 
 @Component
 public class UserCreatedEventHandler extends EventHandler<UserCreatedEvent> {
@@ -20,7 +19,7 @@ public class UserCreatedEventHandler extends EventHandler<UserCreatedEvent> {
 
     @Override
     public void handle(final UserCreatedEvent event) {
-        messageProducer.produce(UserPresenter.present(event));
+        messageProducer.produce(UserCreatedMessage.from(event));
     }
 
 }
